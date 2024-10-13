@@ -1,0 +1,280 @@
+<html><head><base href="https://www.example-restaurant.com">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مطعمنا الشهي - قائمة الطعام الموسعة</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #f5f5f5;
+            direction: rtl;
+        }
+
+        header {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        nav {
+            background-color: #333;
+            display: flex;
+            justify-content: center;
+            padding: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        nav button {
+            background-color: #555;
+            border: none;
+            color: white;
+            padding: 0.5rem 1rem;
+            margin: 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            border-radius: 4px;
+        }
+
+        nav button:hover {
+            background-color: #777;
+        }
+
+        nav button.active {
+            background-color: #4CAF50;
+        }
+
+        .menu-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .menu-item {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin: 1rem;
+            padding: 1rem;
+            width: 250px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .menu-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 8px rgba(0,0,0,0.15);
+        }
+
+        .menu-item img {
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .menu-item h3 {
+            margin-bottom: 0.5rem;
+        }
+
+        .menu-item p {
+            color: #4CAF50;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .add-to-cart {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .add-to-cart:hover {
+            background-color: #45a049;
+        }
+
+        .cart {
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            background-color: white;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .cart:hover {
+            transform: scale(1.1);
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.8rem;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .pop-in {
+            animation: popIn 0.3s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>مطعمنا الشهي</h1>
+    </header>
+
+    <nav>
+        <button class="category-btn active" data-category="main">الأطباق الرئيسية</button>
+        <button class="category-btn" data-category="drinks">المشروبات</button>
+        <button class="category-btn" data-category="appetizers">المقبلات</button>
+        <button class="category-btn" data-category="desserts">الحلويات</button>
+    </nav>
+
+    <div class="menu-container" id="menuContainer"></div>
+
+    <div class="cart">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="9" cy="21" r="1"></circle>
+            <circle cx="20" cy="21" r="1"></circle>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+        </svg>
+        <span class="cart-count">0</span>
+    </div>
+
+    <script>
+        const menuItems = {
+            main: [
+                { name: 'شاورما دجاج', price: 25, image: 'https://example.com/images/chicken-shawarma.jpg' },
+                { name: 'برجر لحم', price: 30, image: 'https://example.com/images/beef-burger.jpg' },
+                { name: 'مشاوي مشكلة', price: 50, image: 'https://example.com/images/mixed-grill.jpg' },
+                { name: 'كبسة لحم', price: 45, image: 'https://example.com/images/meat-kabsa.jpg' },
+                { name: 'مندي دجاج', price: 40, image: 'https://example.com/images/chicken-mandi.jpg' },
+                { name: 'مقلوبة', price: 35, image: 'https://example.com/images/maqluba.jpg' },
+                { name: 'كفتة مشوية', price: 38, image: 'https://example.com/images/grilled-kofta.jpg' },
+                { name: 'سمك مشوي', price: 55, image: 'https://example.com/images/grilled-fish.jpg' },
+                { name: 'دجاج محمر', price: 42, image: 'https://example.com/images/roasted-chicken.jpg' },
+                { name: 'فتة شاورما', price: 33, image: 'https://example.com/images/shawarma-fatteh.jpg' }
+            ],
+            drinks: [
+                { name: 'عصير برتقال', price: 10, image: 'https://example.com/images/orange-juice.jpg' },
+                { name: 'كولا', price: 8, image: 'https://example.com/images/cola.jpg' },
+                { name: 'شاي', price: 5, image: 'https://example.com/images/tea.jpg' },
+                { name: 'قهوة عربية', price: 12, image: 'https://example.com/images/arabic-coffee.jpg' },
+                { name: 'ليموناضة', price: 9, image: 'https://example.com/images/lemonade.jpg' },
+                { name: 'عصير مانجو', price: 11, image: 'https://example.com/images/mango-juice.jpg' },
+                { name: 'مياه معدنية', price: 4, image: 'https://example.com/images/mineral-water.jpg' },
+                { name: 'عصير رمان', price: 13, image: 'https://example.com/images/pomegranate-juice.jpg' },
+                { name: 'شاي مغربي', price: 7, image: 'https://example.com/images/moroccan-tea.jpg' },
+                { name: 'سموثي فراولة', price: 14, image: 'https://example.com/images/strawberry-smoothie.jpg' }
+            ],
+            appetizers: [
+                { name: 'حمص', price: 15, image: 'https://example.com/images/hummus.jpg' },
+                { name: 'فتوش', price: 12, image: 'https://example.com/images/fattoush.jpg' },
+                { name: 'بابا غنوج', price: 18, image: 'https://example.com/images/baba-ganoush.jpg' },
+                { name: 'تبولة', price: 14, image: 'https://example.com/images/tabbouleh.jpg' },
+                { name: 'سمبوسك جبنة', price: 16, image: 'https://example.com/images/cheese-samosa.jpg' },
+                { name: 'فلافل', price: 10, image: 'https://example.com/images/falafel.jpg' },
+                { name: 'كبة مقلية', price: 20, image: 'https://example.com/images/fried-kibbeh.jpg' },
+                { name: 'ورق عنب', price: 22, image: 'https://example.com/images/stuffed-grape-leaves.jpg' },
+                { name: 'مقبلات مشكلة', price: 30, image: 'https://example.com/images/mixed-appetizers.jpg' },
+                { name: 'لبنة بالزعتر', price: 13, image: 'https://example.com/images/labneh-with-zaatar.jpg' }
+            ],
+            desserts: [
+                { name: 'كنافة', price: 20, image: 'https://example.com/images/kunafa.jpg' },
+                { name: 'أم علي', price: 22, image: 'https://example.com/images/umm-ali.jpg' },
+                { name: 'بقلاوة', price: 18, image: 'https://example.com/images/baklava.jpg' },
+                { name: 'مهلبية', price: 15, image: 'https://example.com/images/muhalabia.jpg' },
+                { name: 'قطايف', price: 17, image: 'https://example.com/images/qatayef.jpg' },
+                { name: 'بسبوسة', price: 16, image: 'https://example.com/images/basbousa.jpg' },
+                { name: 'حلاوة الجبن', price: 23, image: 'https://example.com/images/halawet-el-jibn.jpg' },
+                { name: 'عيش السرايا', price: 19, image: 'https://example.com/images/aish-el-saraya.jpg' },
+                { name: 'زلابية', price: 14, image: 'https://example.com/images/zalabia.jpg' },
+                { name: 'لقيمات', price: 12, image: 'https://example.com/images/luqaimat.jpg' }
+            ]
+        };
+
+        const menuContainer = document.getElementById('menuContainer');
+        const categoryButtons = document.querySelectorAll('.category-btn');
+        const cartCount = document.querySelector('.cart-count');
+        let cart = [];
+
+        function displayMenuItems(category) {
+            menuContainer.innerHTML = '';
+            menuItems[category].forEach(item => {
+                const menuItem = document.createElement('div');
+                menuItem.className = 'menu-item';
+                menuItem.innerHTML = `
+                    <img alt="${item.name} - طبق شهي" src="${item.image}" width="200" height="200">
+                    <h3>${item.name}</h3>
+                    <p>${item.price} ريال</p>
+                    <button class="add-to-cart">أضف إلى السلة</button>
+                `;
+                menuContainer.appendChild(menuItem);
+
+                const addToCartBtn = menuItem.querySelector('.add-to-cart');
+                addToCartBtn.addEventListener('click', () => {
+                    addToCart(item);
+                    menuItem.classList.add('pop-in');
+                    setTimeout(() => menuItem.classList.remove('pop-in'), 300);
+                });
+            });
+        }
+
+        function addToCart(item) {
+            cart.push(item);
+            updateCartCount();
+        }
+
+        function updateCartCount() {
+            cartCount.textContent = cart.length;
+            cartCount.classList.add('pop-in');
+            setTimeout(() => cartCount.classList.remove('pop-in'), 300);
+        }
+
+        categoryButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                categoryButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                displayMenuItems(button.dataset.category);
+            });
+        });
+
+        // Initialize with main dishes
+        displayMenuItems('main');
+    </script>
+</body>
+</html>
